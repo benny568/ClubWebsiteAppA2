@@ -1,10 +1,14 @@
 import { Injectable } from 'angular2/core';
+import { Http }       from 'angular2/http';
+import {Observable}   from 'rxjs/Observable';
+import {Observer}     from 'rxjs/Observer';
 import { User }       from '../dao/site-user';
 import { ServerMode } from '../dao/server-mode';
 import { Team }       from '../dao/team';
 import { Member }     from '../dao/member';
 import { NewsStory }  from '../dao/news-story';
 import {ServerDataService} from "./server-data.service";
+import {Sponsor}      from "../dao/sponsor";
 
 @Injectable()
 export class SessionDataService {
@@ -22,11 +26,12 @@ export class SessionDataService {
     dsAllMembers : Array<Member>;
     dsNewsStories : Array<NewsStory>;
     dsPosition : Array<string>;
+    dsSponsors : Array<Sponsor>;
     
     serviceName = 'SessionDataService';
     displayMember = false;
 
-    constructor ( private _sds: ServerDataService) {
+     constructor ( private _http: Http, private _sds: ServerDataService) {
         
         var svr = new ServerMode();
         this.CurrentServerMode = svr.getServerMode();
@@ -39,6 +44,7 @@ export class SessionDataService {
         this.dsCurrentUser = new User();
         this.dsAllMembers = new Array<Member>();
         this.dsNewsStories = new Array<NewsStory>();
+        this.dsSponsors = new Array<Sponsor>();
 
     }
     
@@ -368,25 +374,31 @@ export class SessionDataService {
      * Params in:	None
      * Return:		Sets dsNewsStories
      **********************************************************/
-    loadNewsStories(){
+    loadNewsStories()
+    {
         console.log("### " + this.serviceName + "->" + "loadNewsStories()..");
 
-        // If we have already loaded the news just return
-        if( this.dsNewsStories.length !== 0 )
-            return this;
 
-        this.dsNewsStories = this._sds.getNewsStories( this.getHome() );
-    }
-        
+
+     }
+
     /**********************************************************
      * Name:		getHome()
      * Description:	Returns the _home URL so that it can be used
      * 				as a local or remote app.
-     * Scope:		Externally accessible
+     * Scope:		Externally accessibleif( this.dsNewsStories.length !== 0 )
+     return;
+
+     this._http.get( 'http://localhost:8080/clubRegisterApp/news' )
+     .map(response => response.json()).subscribe(data => {
+            // Update data store
+            this.dsNewsStories = data;
+
+        });
      * Params in:	none
      * Return:		_home URL
      **********************************************************/
-    getHome()
+    getHome() : string
     {
         var _home:string;
         //log.debug(loghdr + "-> getHome()");
@@ -412,13 +424,19 @@ export class SessionDataService {
      * Params in:	None
      * Return:		Sets $scope.teams
      **********************************************************/
-    getTeams(){
+    getTeams() {
+        console.log("### " + this.serviceName + "->" + "getTeams()");
 
         // If we have already loaded the news just return
         if( this.dsTeams.length !== 0 )
-            return this;
-        else
-            this.dsTeams = this._sds.getTeams();
+            return;
+
+        this._http.get( 'http://localhost:8080/clubRegisterApp/teams' )
+            .map(response => response.json()).subscribe(data => {
+            // Update data store
+            this.dsTeams = data;
+
+        });
     }
 
     /**********************************************************
@@ -440,14 +458,37 @@ export class SessionDataService {
         else {
             // Clear out the TeamMembers array first
             this.dsTeamMembers.length = 0;
-            // Get the team members from the server
-            this.getTeamMembersByTeamName( teamName );
+
+            this._http.get( 'http://localhost:8080/clubRegisterApp/team/' + teamName )
+                .map(response => response.json()).subscribe(data => {
+                // Update data store
+                this.dsTeamMembers = data;
+
+            });
         }
     }
 
 
     /// TEMP FUNCTION TO SIM REST CALL TO SERVER
-    getTeamDetailsSim( teamName:string ) {
-        this.dsCurrentTeam = this._sds.getTeamDetailsByName(teamName);
+    getTeamDetailsSim( teamName:string ) : Team {
+        return this.dsCurrentTeam = this._sds.getTeamDetailsByName(teamName);
+    }
+
+    /**********************************************************
+     * Name:		loadCurrentSponsors()
+     * Description:	Load the current sponsors details
+     * Scope:		Externally accessible
+     * Params in:	None
+     * Return:      Array of sponsor objects
+     **********************************************************/
+    loadCurrentSponsors() : Array<Sponsor>
+    {
+        console.log("### " + this.serviceName + "->" + "loadCurrentSponsors()");
+
+        this.dsSponsors = [ {name:"Enzo's Takeaway", image:"./images/adverts/enzos.png"},
+                            {name:"Rochford's Pharmacy", image: "./images/adverts/main-sponsor.png"},
+                            {name:"Ennis Cabs", image: "./images/adverts/ec.png"}
+                        ];
+        return this.dsSponsors;
     }
 }

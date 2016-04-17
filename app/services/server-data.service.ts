@@ -3,9 +3,9 @@
  */
 import { Injectable }   from 'angular2/core';
 import { Http }         from 'angular2/http';
-import { NewsStory }    from '/app/dao/news-story'
-import { Team }         from '/app/dao/team';
-import { Member }       from '/app/dao/member';
+import { NewsStory }    from '../dao/news-story'
+import { Team }         from '../dao/team';
+import { Member }       from '../dao/member';
 
 @Injectable()
 export class ServerDataService {
@@ -39,22 +39,40 @@ export class ServerDataService {
      * Params in:	None
      * Return:		The array of news stories
      **********************************************************/
-    getNewsStories( _home: string ){
+    getNewsStories( _home: string ) {
         console.log("### " + this.serviceName + "->" + "getNewsStories() from: " + _home);
 
-        var sdsNewsStories = new Array<NewsStory>();
+        var sdsNewsStories;// = new Array<NewsStory>();
 
         // TODO: Get this data from the server
-        var csrf = $("meta[name='_csrf']").attr("content");
-        console.log(this.loghdr + "->getNewsStories() csrf token is: ",csrf);
-
+        // var csrf = $("meta[name='_csrf']").attr("content");
+        // console.log(this.loghdr + "->getNewsStories() csrf token is: ",csrf);
+        
         // this._http.defaults.xsrfHeaderName = 'X-CSRF-TOKEN';
         // this._http.defaults.xsrfCookieName = 'CSRF-TOKEN';
         // this._http.defaults.headers.post["Content-Type"] = "application/json";
         // this._http.defaults.headers.post["X-CSRF-TOKEN"] = csrf;
 
-        this._http.get( _home + '/nsws').subscribe( sdsNewsStories => return sdsNewsStories,
-                                                error => console.log("******** ERROR **********"));
+        // this._http.get( 'http://localhost:8080/clubRegisterApp/news')
+        //     .map(res => res.json )
+        //     .map((stories: Array<any>) =>
+        //     {
+        //         let result:Array<NewsStory> = [];
+        //         if (stories)
+        //         {
+        //             stories.forEach( (story) =>
+        //             {
+        //                 result.push(new NewsStory(  story.nsid,
+        //                                             story.category,
+        //                                             story.title,
+        //                                             story.description,
+        //                                             story.story,
+        //                                             story.image
+        //                                         ));
+        //             });
+        //         }
+        //         return result;
+        //     });
 
 
         ///////////////////////////////////////
@@ -75,8 +93,8 @@ export class ServerDataService {
         //     '/images/actionshots/2.jpg'
         // );
         // sdsNewsStories.push(ns);
-        //
-        // return sdsNewsStories;
+        //s)
+        //return sdsNewsStories;
     }
 
     /**********************************************************
@@ -87,7 +105,7 @@ export class ServerDataService {
      * Return:		The team details
      **********************************************************/
     getTeamDetailsByName( teamName:string ) {
-        console.log("### " + this.serviceName + "->" + "getTeamDetailsByName()");
+        console.log("### " + this.serviceName + "->" + "getTeamDetailsByName(" + teamName + ")");
 
         var sdsCurrentTeam = new Team();
 
@@ -108,6 +126,7 @@ export class ServerDataService {
             sdsCurrentTeam.noticeboard = 'This is test data...';
         }
 
+        console.log("### " + this.serviceName + "->" + "getTeamDetailsByName(" + teamName + "): " + sdsCurrentTeam);
         return sdsCurrentTeam;
     }
 

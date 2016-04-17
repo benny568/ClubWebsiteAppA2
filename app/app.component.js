@@ -66,6 +66,7 @@ System.register(['angular2/core', 'angular2/router', './services/session-data.se
                     this._dataService = _dataService;
                     this._router = _router;
                     this.componentName = 'AppComponent';
+                    this.logHdr = "#### " + this.componentName + ": ";
                 }
                 /**********************************************************
                  * Name:		goHome()
@@ -75,13 +76,17 @@ System.register(['angular2/core', 'angular2/router', './services/session-data.se
                  * Return:      None
                  **********************************************************/
                 AppComponent.prototype.goHome = function () {
-                    console.log("#### " + this.componentName + "->" + "goHome()");
+                    console.log(this.logHdr + "->" + "goHome()");
+                    //this._dataService.loadNewsStories();
+                    this._dataService.loadCurrentSponsors();
+                    //console.log(this.logHdr + "News: " + this._dataService.dsNewsStories );
+                    console.log(this.logHdr + "Sponsors: " + this._dataService.dsSponsors);
                     this._router.navigate(['Home', {}]);
                 };
                 AppComponent.prototype.viewTeam = function (tname) {
                     console.log("#### " + this.componentName + "->" + "viewTeam(" + tname + ")");
                     this._dataService.getTeams();
-                    this._dataService.loadCurrentTeamByName(tname);
+                    this._dataService.loadCurrentTeamMembersByName(tname);
                     this._router.navigate(['ViewTeam', { team: tname }]);
                 };
                 /**********************************************************

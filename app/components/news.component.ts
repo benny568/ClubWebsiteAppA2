@@ -23,10 +23,12 @@ import { SessionDataService }   from '../services/session-data.service';
 
 export class NewsComponent {
 
+    componentName = 'NewsComponent';
+
     constructor(private _dataService: SessionDataService) { }
 
     ngOnInit() {
-        console.log("### NewsComponent -> ngOnInit()")
+        console.log("### " + this.componentName + "-> ngOnInit()");
         this._dataService.loadNewsStories();
     }
 }

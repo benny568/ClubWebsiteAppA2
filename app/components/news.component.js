@@ -33,9 +33,10 @@ System.register(['angular2/core', 'angular2/common', './slide.component', './car
             NewsComponent = (function () {
                 function NewsComponent(_dataService) {
                     this._dataService = _dataService;
+                    this.componentName = 'NewsComponent';
                 }
                 NewsComponent.prototype.ngOnInit = function () {
-                    console.log("### NewsComponent -> ngOnInit()");
+                    console.log("### " + this.componentName + "-> ngOnInit()");
                     this._dataService.loadNewsStories();
                 };
                 NewsComponent = __decorate([

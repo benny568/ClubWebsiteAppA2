@@ -1,4 +1,4 @@
-System.register(['angular2/core', '../dao/site-user', '../dao/server-mode', '../dao/team', '../dao/member', "./server-data.service"], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/http', '../dao/site-user', '../dao/server-mode', '../dao/team', '../dao/member', "./server-data.service"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,12 +10,15 @@ System.register(['angular2/core', '../dao/site-user', '../dao/server-mode', '../
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, site_user_1, server_mode_1, team_1, member_1, server_data_service_1;
+    var core_1, http_1, site_user_1, server_mode_1, team_1, member_1, server_data_service_1;
     var SessionDataService;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
+            },
+            function (http_1_1) {
+                http_1 = http_1_1;
             },
             function (site_user_1_1) {
                 site_user_1 = site_user_1_1;
@@ -34,7 +37,8 @@ System.register(['angular2/core', '../dao/site-user', '../dao/server-mode', '../
             }],
         execute: function() {
             SessionDataService = (function () {
-                function SessionDataService(_sds) {
+                function SessionDataService(_http, _sds) {
+                    this._http = _http;
                     this._sds = _sds;
                     this.modes = { LOCAL: 0, REMOTE: 1 };
                     this.serviceName = 'SessionDataService';
@@ -50,6 +54,7 @@ System.register(['angular2/core', '../dao/site-user', '../dao/server-mode', '../
                     this.dsCurrentUser = new site_user_1.User();
                     this.dsAllMembers = new Array();
                     this.dsNewsStories = new Array();
+                    this.dsSponsors = new Array();
                 }
                 /**********************************************************
                  * Name:		setCurrentMember()
@@ -306,16 +311,20 @@ System.register(['angular2/core', '../dao/site-user', '../dao/server-mode', '../
                  **********************************************************/
                 SessionDataService.prototype.loadNewsStories = function () {
                     console.log("### " + this.serviceName + "->" + "loadNewsStories()..");
-                    // If we have already loaded the news just return
-                    if (this.dsNewsStories.length !== 0)
-                        return this;
-                    this.dsNewsStories = this._sds.getNewsStories(this.getHome());
                 };
                 /**********************************************************
                  * Name:		getHome()
                  * Description:	Returns the _home URL so that it can be used
                  * 				as a local or remote app.
-                 * Scope:		Externally accessible
+                 * Scope:		Externally accessibleif( this.dsNewsStories.length !== 0 )
+                 return;
+            
+                 this._http.get( 'http://localhost:8080/clubRegisterApp/news' )
+                 .map(response => response.json()).subscribe(data => {
+                        // Update data store
+                        this.dsNewsStories = data;
+            
+                    });
                  * Params in:	none
                  * Return:		_home URL
                  **********************************************************/
@@ -341,11 +350,16 @@ System.register(['angular2/core', '../dao/site-user', '../dao/server-mode', '../
                  * Return:		Sets $scope.teams
                  **********************************************************/
                 SessionDataService.prototype.getTeams = function () {
+                    var _this = this;
+                    console.log("### " + this.serviceName + "->" + "getTeams()");
                     // If we have already loaded the news just return
                     if (this.dsTeams.length !== 0)
-                        return this;
-                    else
-                        this.dsTeams = this._sds.getTeams();
+                        return;
+                    this._http.get('http://localhost:8080/clubRegisterApp/teams')
+                        .map(function (response) { return response.json(); }).subscribe(function (data) {
+                        // Update data store
+                        _this.dsTeams = data;
+                    });
                 };
                 /**********************************************************
                  * Name:		loadCurrentTeamMembersByName()
@@ -355,6 +369,7 @@ System.register(['angular2/core', '../dao/site-user', '../dao/server-mode', '../
                  * Return:
                  **********************************************************/
                 SessionDataService.prototype.loadCurrentTeamMembersByName = function (teamName) {
+                    var _this = this;
                     console.log("### " + this.serviceName + "->" + "loadCurrentTeamByName(" + teamName + ")");
                     if ((this.dsTeamMembers.length !== 0) && (this.dsCurrentTeam.name == teamName)) {
                         console.log("### " + this.serviceName + "->" + "loadCurrentTeamByName():" + "Members already loaded not loading again!");
@@ -363,17 +378,35 @@ System.register(['angular2/core', '../dao/site-user', '../dao/server-mode', '../
                     else {
                         // Clear out the TeamMembers array first
                         this.dsTeamMembers.length = 0;
-                        // Get the team members from the server
-                        this.getTeamMembersByTeamName(teamName);
+                        this._http.get('http://localhost:8080/clubRegisterApp/team/' + teamName)
+                            .map(function (response) { return response.json(); }).subscribe(function (data) {
+                            // Update data store
+                            _this.dsTeamMembers = data;
+                        });
                     }
                 };
                 /// TEMP FUNCTION TO SIM REST CALL TO SERVER
                 SessionDataService.prototype.getTeamDetailsSim = function (teamName) {
-                    this.dsCurrentTeam = this._sds.getTeamDetailsByName(teamName);
+                    return this.dsCurrentTeam = this._sds.getTeamDetailsByName(teamName);
+                };
+                /**********************************************************
+                 * Name:		loadCurrentSponsors()
+                 * Description:	Load the current sponsors details
+                 * Scope:		Externally accessible
+                 * Params in:	None
+                 * Return:      Array of sponsor objects
+                 **********************************************************/
+                SessionDataService.prototype.loadCurrentSponsors = function () {
+                    console.log("### " + this.serviceName + "->" + "loadCurrentSponsors()");
+                    this.dsSponsors = [{ name: "Enzo's Takeaway", image: "./images/adverts/enzos.png" },
+                        { name: "Rochford's Pharmacy", image: "./images/adverts/main-sponsor.png" },
+                        { name: "Ennis Cabs", image: "./images/adverts/ec.png" }
+                    ];
+                    return this.dsSponsors;
                 };
                 SessionDataService = __decorate([
                     core_1.Injectable(), 
-                    __metadata('design:paramtypes', [server_data_service_1.ServerDataService])
+                    __metadata('design:paramtypes', [http_1.Http, server_data_service_1.ServerDataService])
                 ], SessionDataService);
                 return SessionDataService;
             }());

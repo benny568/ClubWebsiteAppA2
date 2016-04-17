@@ -60,6 +60,7 @@ export class AppComponent {
     constructor(private _dataService: SessionDataService, private _router: Router) { }
 
     componentName = 'AppComponent';
+    logHdr = "#### " + this.componentName + ": ";
 
     /**********************************************************
      * Name:		goHome()
@@ -70,8 +71,12 @@ export class AppComponent {
      **********************************************************/
     goHome()
     {
-        console.log("#### " + this.componentName + "->" + "goHome()");
+        console.log(this.logHdr + "->" + "goHome()");
 
+        //this._dataService.loadNewsStories();
+        this._dataService.loadCurrentSponsors();
+        //console.log(this.logHdr + "News: " + this._dataService.dsNewsStories );
+        console.log(this.logHdr + "Sponsors: " + this._dataService.dsSponsors );
         this._router.navigate( ['Home', {}] );
     }
 
@@ -79,7 +84,7 @@ export class AppComponent {
     {
         console.log("#### " + this.componentName + "->" + "viewTeam(" + tname + ")");
         this._dataService.getTeams();
-        this._dataService.loadCurrentTeamByName(tname);
+        this._dataService.loadCurrentTeamMembersByName(tname);
         this._router.navigate( ['ViewTeam', { team: tname }] );
     }
 

@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', './slide.component', './carousel.component'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/common', './slide.component', './carousel.component', "../services/session-data.service"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/common', './slide.component', './car
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, slide_component_1, carousel_component_1;
+    var core_1, common_1, slide_component_1, carousel_component_1, session_data_service_1;
     var SponsorsComponent;
     return {
         setters:[
@@ -25,16 +25,19 @@ System.register(['angular2/core', 'angular2/common', './slide.component', './car
             },
             function (carousel_component_1_1) {
                 carousel_component_1 = carousel_component_1_1;
+            },
+            function (session_data_service_1_1) {
+                session_data_service_1 = session_data_service_1_1;
             }],
         execute: function() {
             SponsorsComponent = (function () {
-                function SponsorsComponent() {
+                function SponsorsComponent(_dataService) {
+                    this._dataService = _dataService;
+                    this.componentName = 'SponsorsComponent';
                 }
                 SponsorsComponent.prototype.ngOnInit = function () {
-                    this.sponsors = [{ name: "Enzo's Takeaway", image: "./images/adverts/enzos.png" },
-                        { name: "Rochford's Pharmacy", image: "./images/adverts/main-sponsor.png" },
-                        { name: "Ennis Cabs", image: "./images/adverts/ec.png" }
-                    ];
+                    console.log("### " + this.componentName + "-> ngOnInit()");
+                    this._dataService.loadCurrentSponsors();
                 };
                 SponsorsComponent = __decorate([
                     core_1.Component({
@@ -42,7 +45,7 @@ System.register(['angular2/core', 'angular2/common', './slide.component', './car
                         templateUrl: '/app/htmltemplates/sponsors.component.html',
                         directives: [slide_component_1.Slide, carousel_component_1.Carousel, common_1.CORE_DIRECTIVES, common_1.FORM_DIRECTIVES]
                     }), 
-                    __metadata('design:paramtypes', [])
+                    __metadata('design:paramtypes', [session_data_service_1.SessionDataService])
                 ], SponsorsComponent);
                 return SponsorsComponent;
             }());

@@ -5,7 +5,8 @@ import {Component} from 'angular2/core';
 import {CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/common';
 import {Slide} from './slide.component';
 import {Carousel} from './carousel.component';
-import { Sponsor } from '/app/dao/sponsor';
+import { Sponsor } from '../dao/sponsor';
+import {SessionDataService} from "../services/session-data.service";
 
 @Component({
     selector: 'sponsors',
@@ -15,13 +16,12 @@ import { Sponsor } from '/app/dao/sponsor';
 
 export class SponsorsComponent {
     sponsors:Array<Sponsor>;
+    componentName = 'SponsorsComponent';
     
-    constructor() { }
+    constructor( private _dataService: SessionDataService ) { }
 
     ngOnInit(){
-        this.sponsors = [ {name:"Enzo's Takeaway", image:"./images/adverts/enzos.png"},
-            {name:"Rochford's Pharmacy", image: "./images/adverts/main-sponsor.png"},
-            {name:"Ennis Cabs", image: "./images/adverts/ec.png"}
-        ];
+        console.log("### " + this.componentName + "-> ngOnInit()");
+        this._dataService.loadCurrentSponsors();
     }
 }

@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/http', '/app/dao/team'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/http', '../dao/team'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -54,18 +54,34 @@ System.register(['angular2/core', 'angular2/http', '/app/dao/team'], function(ex
                  **********************************************************/
                 ServerDataService.prototype.getNewsStories = function (_home) {
                     console.log("### " + this.serviceName + "->" + "getNewsStories() from: " + _home);
-                    var sdsNewsStories = new Array();
+                    var sdsNewsStories; // = new Array<NewsStory>();
                     // TODO: Get this data from the server
-                    var csrf = $("meta[name='_csrf']").attr("content");
-                    console.log(this.loghdr + "->getNewsStories() csrf token is: ", csrf);
+                    // var csrf = $("meta[name='_csrf']").attr("content");
+                    // console.log(this.loghdr + "->getNewsStories() csrf token is: ",csrf);
                     // this._http.defaults.xsrfHeaderName = 'X-CSRF-TOKEN';
                     // this._http.defaults.xsrfCookieName = 'CSRF-TOKEN';
                     // this._http.defaults.headers.post["Content-Type"] = "application/json";
                     // this._http.defaults.headers.post["X-CSRF-TOKEN"] = csrf;
-                    this._http.get(_home + '/nsws').subscribe(function (sdsNewsStories) {
-                        return sdsNewsStories,
-                            function (error) { return console.log("******** ERROR **********"); };
-                    });
+                    // this._http.get( 'http://localhost:8080/clubRegisterApp/news')
+                    //     .map(res => res.json )
+                    //     .map((stories: Array<any>) =>
+                    //     {
+                    //         let result:Array<NewsStory> = [];
+                    //         if (stories)
+                    //         {
+                    //             stories.forEach( (story) =>
+                    //             {
+                    //                 result.push(new NewsStory(  story.nsid,
+                    //                                             story.category,
+                    //                                             story.title,
+                    //                                             story.description,
+                    //                                             story.story,
+                    //                                             story.image
+                    //                                         ));
+                    //             });
+                    //         }
+                    //         return result;
+                    //     });
                     ///////////////////////////////////////
                     // var ns = new NewsStory( 1,
                     //     'G',
@@ -83,8 +99,8 @@ System.register(['angular2/core', 'angular2/http', '/app/dao/team'], function(ex
                     //     '/images/actionshots/2.jpg'
                     // );
                     // sdsNewsStories.push(ns);
-                    //
-                    // return sdsNewsStories;
+                    //s)
+                    //return sdsNewsStories;
                 };
                 /**********************************************************
                  * Name:		getTeamDetailsByName()
@@ -94,7 +110,7 @@ System.register(['angular2/core', 'angular2/http', '/app/dao/team'], function(ex
                  * Return:		The team details
                  **********************************************************/
                 ServerDataService.prototype.getTeamDetailsByName = function (teamName) {
-                    console.log("### " + this.serviceName + "->" + "getTeamDetailsByName()");
+                    console.log("### " + this.serviceName + "->" + "getTeamDetailsByName(" + teamName + ")");
                     var sdsCurrentTeam = new team_1.Team();
                     if (teamName == 'U18') {
                         sdsCurrentTeam.id = 20;
@@ -112,6 +128,7 @@ System.register(['angular2/core', 'angular2/http', '/app/dao/team'], function(ex
                         sdsCurrentTeam.name = 'U18';
                         sdsCurrentTeam.noticeboard = 'This is test data...';
                     }
+                    console.log("### " + this.serviceName + "->" + "getTeamDetailsByName(" + teamName + "): " + sdsCurrentTeam);
                     return sdsCurrentTeam;
                 };
                 /**********************************************************
