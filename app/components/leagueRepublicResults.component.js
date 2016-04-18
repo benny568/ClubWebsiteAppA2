@@ -1,4 +1,4 @@
-System.register(['angular2/core', '../services/session-data.service'], function(exports_1, context_1) {
+System.register(['angular2/core', '../services/session-data.service', "angular2/router"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', '../services/session-data.service'], function(
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, session_data_service_1;
+    var core_1, session_data_service_1, router_1;
     var LeagueRepublicResults;
     return {
         setters:[
@@ -19,17 +19,27 @@ System.register(['angular2/core', '../services/session-data.service'], function(
             },
             function (session_data_service_1_1) {
                 session_data_service_1 = session_data_service_1_1;
+            },
+            function (router_1_1) {
+                router_1 = router_1_1;
             }],
         execute: function() {
             LeagueRepublicResults = (function () {
-                function LeagueRepublicResults(_dataService) {
+                function LeagueRepublicResults(_dataService, rParams) {
                     this._dataService = _dataService;
+                    this.rParams = rParams;
                     this.className = 'LeagueRepublicResults';
                 }
                 LeagueRepublicResults.prototype.ngOnInit = function () {
+                    var teamName;
                     console.log("### " + this.className + "->" + "ngOnInit()");
+                    teamName = this.rParams.get('team');
+                    // (1) Read in the list of teams
+                    this._dataService.getTeams();
+                    // (2) Set the current team to the one in question
+                    this._dataService.setCurrentTeamByName(teamName);
                     this.lrcode = this._dataService.dsCurrentTeam.lrResultsCode;
-                    console.log("### " + this.className + "->" + "ngOnInit(): lrcode is: " + this.lrcode);
+                    console.log("### " + this.className + "->" + "ngOnInit(): lrResultsCode is: " + this.lrcode);
                     if (window["numCodeSnippets"] == undefined) {
                         window["numCodeSnippets"] = 1;
                     }
@@ -51,7 +61,7 @@ System.register(['angular2/core', '../services/session-data.service'], function(
                         selector: 'lr-results',
                         template: '<div id=\"lrep{{lrcode}}\"></div>'
                     }), 
-                    __metadata('design:paramtypes', [session_data_service_1.SessionDataService])
+                    __metadata('design:paramtypes', [session_data_service_1.SessionDataService, router_1.RouteParams])
                 ], LeagueRepublicResults);
                 return LeagueRepublicResults;
             }());

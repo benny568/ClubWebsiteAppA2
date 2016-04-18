@@ -175,7 +175,7 @@ System.register(['angular2/core', 'angular2/http', '../dao/site-user', '../dao/s
                  * Return:
                  **********************************************************/
                 SessionDataService.prototype.applyMemberChange = function (members, member) {
-                    var index = this.findMemberIndex(members, member);
+                    var index = SessionDataService.findMemberIndex(members, member);
                     if (index === -1) {
                         return;
                     }
@@ -205,7 +205,7 @@ System.register(['angular2/core', 'angular2/http', '../dao/site-user', '../dao/s
                  * Return:
                  **********************************************************/
                 SessionDataService.prototype.applyMemberDel = function (members, member) {
-                    var index = this.findMemberIndex(members, member);
+                    var index = SessionDataService.findMemberIndex(members, member);
                     if (index === -1) {
                         return;
                     }
@@ -224,7 +224,7 @@ System.register(['angular2/core', 'angular2/http', '../dao/site-user', '../dao/s
                 SessionDataService.prototype.applyMemberAdd = function (members, member) {
                     if (this.dsTeamMembers[member.team] === undefined)
                         //getMembers4team(member.team);
-                        var index = this.findMemberIndex(this.dsTeamMembers[member.team], member);
+                        var index = SessionDataService.findMemberIndex(this.dsTeamMembers[member.team], member);
                     if (index === -1) {
                         members[member.team].push(member);
                     }
@@ -264,7 +264,7 @@ System.register(['angular2/core', 'angular2/http', '../dao/site-user', '../dao/s
                  * Params in:	None
                  * Return:		The index value
                  **********************************************************/
-                SessionDataService.prototype.findMemberIndex = function (members, member) {
+                SessionDataService.findMemberIndex = function (members, member) {
                     var index = -1;
                     if (typeof members !== undefined) {
                         for (var i = 0; i < members.length; i++) {
@@ -303,6 +303,28 @@ System.register(['angular2/core', 'angular2/http', '../dao/site-user', '../dao/s
                     return 0;
                 };
                 /**********************************************************
+                 * Name:		setCurrentTeamByName()
+                 * Description:	Set the current team in memory
+                 * Scope:		Internal
+                 * Params in:	Team name as a string
+                 * Return:		None
+                 **********************************************************/
+                SessionDataService.prototype.setCurrentTeamByName = function (teamName) {
+                    console.log("### " + this.serviceName + "->" + "setCurrentTeamByName(" + teamName + ")");
+                    // Ensure the teams information has been loaded
+                    if (this.dsTeams.length < 1)
+                        this.getTeams();
+                    // Pick out this team and set it as the current one
+                    for (var _i = 0, _a = this.dsTeams; _i < _a.length; _i++) {
+                        var team = _a[_i];
+                        if (team.name == teamName) {
+                            this.dsCurrentTeam = team;
+                            console.log("### " + this.serviceName + "->" + "setCurrentTeamByName(): Team set to " + teamName);
+                            break;
+                        }
+                    }
+                };
+                /**********************************************************
                  * Name:		loadNewsStories()
                  * Description:	Retrieves a list of Newws from the server
                  * Scope:		Internal
@@ -310,7 +332,13 @@ System.register(['angular2/core', 'angular2/http', '../dao/site-user', '../dao/s
                  * Return:		Sets dsNewsStories
                  **********************************************************/
                 SessionDataService.prototype.loadNewsStories = function () {
+                    var _this = this;
                     console.log("### " + this.serviceName + "->" + "loadNewsStories()..");
+                    this._http.get('http://localhost:8080/clubRegisterApp/news')
+                        .map(function (response) { return response.json(); }).subscribe(function (data) {
+                        // Update data store
+                        _this.dsNewsStories = data;
+                    });
                 };
                 /**********************************************************
                  * Name:		getHome()
@@ -370,7 +398,11 @@ System.register(['angular2/core', 'angular2/http', '../dao/site-user', '../dao/s
                  **********************************************************/
                 SessionDataService.prototype.loadCurrentTeamMembersByName = function (teamName) {
                     var _this = this;
-                    console.log("### " + this.serviceName + "->" + "loadCurrentTeamByName(" + teamName + ")");
+                    console.log("### " + this.serviceName + "->" + "loadCurrentTeamMembersByName(" + teamName + ")");
+                    console.log("====> LOOP-BACK VERSION !! <====");
+                    this.dsTeamMembers = this._sds.getTeamMembersByTeamName(teamName);
+                    return;
+                    ////////////////////////////////////////////////
                     if ((this.dsTeamMembers.length !== 0) && (this.dsCurrentTeam.name == teamName)) {
                         console.log("### " + this.serviceName + "->" + "loadCurrentTeamByName():" + "Members already loaded not loading again!");
                         return;
@@ -403,6 +435,16 @@ System.register(['angular2/core', 'angular2/http', '../dao/site-user', '../dao/s
                         { name: "Ennis Cabs", image: "./images/adverts/ec.png" }
                     ];
                     return this.dsSponsors;
+                };
+                /**********************************************************
+                 * Name:		clearCurrentMember()
+                 * Description:	Clear out the dsCurrentMember
+                 * Scope:		Externally accessible
+                 * Params in:	None
+                 * Return:      None
+                 **********************************************************/
+                SessionDataService.prototype.clearCurrentMember = function () {
+                    this.dsCurrentMember = null;
                 };
                 SessionDataService = __decorate([
                     core_1.Injectable(), 

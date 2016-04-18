@@ -364,6 +364,32 @@ export class SessionDataService {
 		}
 		return 0;
 	}
+
+    /**********************************************************
+     * Name:		setCurrentTeamByName()
+     * Description:	Set the current team in memory
+     * Scope:		Internal
+     * Params in:	Team name as a string
+     * Return:		None
+     **********************************************************/
+    setCurrentTeamByName( teamName: string)
+    {
+        console.log("### " + this.serviceName + "->" + "setCurrentTeamByName(" + teamName + ")");
+
+        // Ensure the teams information has been loaded
+        if( this.dsTeams.length < 1 )
+            this.getTeams();
+
+        // Pick out this team and set it as the current one
+        for( var team of this.dsTeams )
+        {
+            if( team.name == teamName ) {
+                this.dsCurrentTeam = team;
+                console.log("### " + this.serviceName + "->" + "setCurrentTeamByName(): Team set to " + teamName);
+                break;
+            }
+        }
+    }
     
     /**********************************************************
      * Name:		loadNewsStories()
@@ -450,7 +476,13 @@ export class SessionDataService {
      **********************************************************/
     loadCurrentTeamMembersByName( teamName:string )
     {
-        console.log("### " + this.serviceName + "->" + "loadCurrentTeamByName(" + teamName + ")");
+        console.log("### " + this.serviceName + "->" + "loadCurrentTeamMembersByName(" + teamName + ")");
+
+        console.log("====> LOOP-BACK VERSION !! <====");
+
+        this.dsTeamMembers = this._sds.getTeamMembersByTeamName(teamName);
+        return;
+        ////////////////////////////////////////////////
 
         if( (this.dsTeamMembers.length !== 0) && (this.dsCurrentTeam.name == teamName) )
         {
@@ -492,5 +524,17 @@ export class SessionDataService {
                             {name:"Ennis Cabs", image: "./images/adverts/ec.png"}
                         ];
         return this.dsSponsors;
+    }
+
+    /**********************************************************
+     * Name:		clearCurrentMember()
+     * Description:	Clear out the dsCurrentMember
+     * Scope:		Externally accessible
+     * Params in:	None
+     * Return:      None
+     **********************************************************/
+    clearCurrentMember()
+    {
+        this.dsCurrentMember = null;
     }
 }

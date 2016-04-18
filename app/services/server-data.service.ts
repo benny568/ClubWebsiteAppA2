@@ -3,7 +3,6 @@
  */
 import { Injectable }   from 'angular2/core';
 import { Http }         from 'angular2/http';
-import { NewsStory }    from '../dao/news-story'
 import { Team }         from '../dao/team';
 import { Member }       from '../dao/member';
 
@@ -12,7 +11,7 @@ export class ServerDataService {
     serviceName:string = 'ServerDataService';
     loghdr:string = '==> ' + this.serviceName;
     
-    constructor( private _http: Http ) {}
+    constructor() {}
     
     ngOnInit() {
         console.log("### " + this.serviceName + "->" + "ngOnInit()");
@@ -171,6 +170,8 @@ export class ServerDataService {
         };
         
         sdsTeamMembers.push(tmpMem);
+
+        console.log("### " + this.serviceName + "->" + "getTeamMembersByTeamName(): Added " + tmpMem);
         
         tmpMem = {
             name: 'Paddy Honan',
@@ -199,6 +200,7 @@ export class ServerDataService {
         };
         
         sdsTeamMembers.push(tmpMem);
+        console.log("### " + this.serviceName + "->" + "getTeamMembersByTeamName(): Added " + tmpMem);
         
         tmpMem = {
             name: 'Brendan O\'Daly',
@@ -227,6 +229,7 @@ export class ServerDataService {
         };
         
         sdsTeamMembers.push(tmpMem);
+        console.log("### " + this.serviceName + "->" + "getTeamMembersByTeamName(): Added " + tmpMem);
         
         tmpMem = {
             name: 'Patrick McDaid',
@@ -255,6 +258,7 @@ export class ServerDataService {
         };
         
         sdsTeamMembers.push(tmpMem);
+        console.log("### " + this.serviceName + "->" + "getTeamMembersByTeamName(): Added " + tmpMem);
         
         return sdsTeamMembers;
     }

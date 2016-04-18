@@ -67,6 +67,8 @@ System.register(['angular2/core', 'angular2/router', './services/session-data.se
                     this._router = _router;
                     this.componentName = 'AppComponent';
                     this.logHdr = "#### " + this.componentName + ": ";
+                    // Load the teams to use in the menu system
+                    this._dataService.getTeams();
                 }
                 /**********************************************************
                  * Name:		goHome()
@@ -77,29 +79,46 @@ System.register(['angular2/core', 'angular2/router', './services/session-data.se
                  **********************************************************/
                 AppComponent.prototype.goHome = function () {
                     console.log(this.logHdr + "->" + "goHome()");
-                    //this._dataService.loadNewsStories();
+                    this._dataService.loadNewsStories();
                     this._dataService.loadCurrentSponsors();
                     //console.log(this.logHdr + "News: " + this._dataService.dsNewsStories );
                     console.log(this.logHdr + "Sponsors: " + this._dataService.dsSponsors);
                     this._router.navigate(['Home', {}]);
                 };
+                /**********************************************************
+                 * Name:		viewTeam()
+                 * Description:	Navigate to the Team View page
+                 * Scope:		Internally accessible
+                 * Params in:	None
+                 * Return:      None
+                 **********************************************************/
                 AppComponent.prototype.viewTeam = function (tname) {
                     console.log("#### " + this.componentName + "->" + "viewTeam(" + tname + ")");
+                    // (1) Read in the list of teams
                     this._dataService.getTeams();
+                    // (2) Set the current team to the one in question
+                    this._dataService.setCurrentTeamByName(tname);
+                    // (3) Load in the team members for that team
                     this._dataService.loadCurrentTeamMembersByName(tname);
+                    // (4) Reset the current member so the display doesn't show until the member is clicked on
+                    this._dataService.clearCurrentMember();
+                    // (5) Change view
                     this._router.navigate(['ViewTeam', { team: tname }]);
                 };
                 /**********************************************************
-                 * Name:		goHome()
-                 * Description:	Navigate to the home page
+                 * Name:		farView()
+                 * Description:	Navigate to the Fixtures & Results page
                  * Scope:		Internally accessible
                  * Params in:	None
                  * Return:      None
                  **********************************************************/
                 AppComponent.prototype.farView = function (tname) {
                     console.log("#### " + this.componentName + "->" + "farView(" + tname + ")");
+                    // (1) Read in the list of teams
                     this._dataService.getTeams();
-                    this._dataService.loadCurrentTeamMembersByName(tname);
+                    // (2) Set the current team to the one in question
+                    this._dataService.setCurrentTeamByName(tname);
+                    // (3) Change view
                     this._router.navigate(['FarView', { team: tname }]);
                 };
                 /**********************************************************

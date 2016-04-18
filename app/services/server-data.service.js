@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/http', '../dao/team'], function(exports_1, context_1) {
+System.register(['angular2/core', '../dao/team'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,23 +10,19 @@ System.register(['angular2/core', 'angular2/http', '../dao/team'], function(expo
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, http_1, team_1;
+    var core_1, team_1;
     var ServerDataService;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (http_1_1) {
-                http_1 = http_1_1;
-            },
             function (team_1_1) {
                 team_1 = team_1_1;
             }],
         execute: function() {
             ServerDataService = (function () {
-                function ServerDataService(_http) {
-                    this._http = _http;
+                function ServerDataService() {
                     this.serviceName = 'ServerDataService';
                     this.loghdr = '==> ' + this.serviceName;
                 }
@@ -169,6 +165,7 @@ System.register(['angular2/core', 'angular2/http', '../dao/team'], function(expo
                         status: 'ENABLED'
                     };
                     sdsTeamMembers.push(tmpMem);
+                    console.log("### " + this.serviceName + "->" + "getTeamMembersByTeamName(): Added " + tmpMem);
                     tmpMem = {
                         name: 'Paddy Honan',
                         address: 'Bank Place, Ennis',
@@ -195,6 +192,7 @@ System.register(['angular2/core', 'angular2/http', '../dao/team'], function(expo
                         status: 'ENABLED'
                     };
                     sdsTeamMembers.push(tmpMem);
+                    console.log("### " + this.serviceName + "->" + "getTeamMembersByTeamName(): Added " + tmpMem);
                     tmpMem = {
                         name: 'Brendan O\'Daly',
                         address: 'Reaskaun, Ennis',
@@ -221,6 +219,7 @@ System.register(['angular2/core', 'angular2/http', '../dao/team'], function(expo
                         status: 'ENABLED'
                     };
                     sdsTeamMembers.push(tmpMem);
+                    console.log("### " + this.serviceName + "->" + "getTeamMembersByTeamName(): Added " + tmpMem);
                     tmpMem = {
                         name: 'Patrick McDaid',
                         address: '12 Oak Park, Ennis',
@@ -247,11 +246,12 @@ System.register(['angular2/core', 'angular2/http', '../dao/team'], function(expo
                         status: 'ENABLED'
                     };
                     sdsTeamMembers.push(tmpMem);
+                    console.log("### " + this.serviceName + "->" + "getTeamMembersByTeamName(): Added " + tmpMem);
                     return sdsTeamMembers;
                 };
                 ServerDataService = __decorate([
                     core_1.Injectable(), 
-                    __metadata('design:paramtypes', [http_1.Http])
+                    __metadata('design:paramtypes', [])
                 ], ServerDataService);
                 return ServerDataService;
             }());
