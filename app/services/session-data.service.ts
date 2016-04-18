@@ -1,7 +1,5 @@
 import { Injectable } from 'angular2/core';
 import { Http }       from 'angular2/http';
-import {Observable}   from 'rxjs/Observable';
-import {Observer}     from 'rxjs/Observer';
 import { User }       from '../dao/site-user';
 import { ServerMode } from '../dao/server-mode';
 import { Team }       from '../dao/team';
@@ -197,7 +195,7 @@ export class SessionDataService {
      **********************************************************/
     applyMemberChange(members, member)
 	{
-		var index:number = this.findMemberIndex( members, member );
+		var index:number = SessionDataService.findMemberIndex( members, member );
 
 		if( index === -1 )
 		{
@@ -232,7 +230,7 @@ export class SessionDataService {
      **********************************************************/
     applyMemberDel( members, member )
 	{
-		var index:number = this.findMemberIndex( members, member );
+		var index:number = SessionDataService.findMemberIndex( members, member );
 
 		if( index === -1 )
 		{
@@ -257,7 +255,7 @@ export class SessionDataService {
 		if( this.dsTeamMembers[member.team] === undefined )
 			//getMembers4team(member.team);
 
-		var index = this.findMemberIndex( this.dsTeamMembers[member.team], member );
+		var index = SessionDataService.findMemberIndex( this.dsTeamMembers[member.team], member );
 
 		if( index === -1 )
 		{// Add the member if it doesn't exits
@@ -316,7 +314,7 @@ export class SessionDataService {
      * Params in:	None
      * Return:		The index value
      **********************************************************/
-    findMemberIndex( members, member )
+    static findMemberIndex( members, member )
 	{
 		var index = -1;
 		
@@ -378,7 +376,11 @@ export class SessionDataService {
     {
         console.log("### " + this.serviceName + "->" + "loadNewsStories()..");
 
-
+        this._http.get( 'http://localhost:8080/clubRegisterApp/news' )
+            .map(response => response.json()).subscribe(data => {
+            // Update data store
+            this.dsNewsStories = data;
+        });
 
      }
 
