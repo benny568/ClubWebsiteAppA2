@@ -1,6 +1,8 @@
 {
-  "name": "angular2-quickstart",
+  "name": "clubRegisterApp",
   "version": "1.0.0",
+  "description": "Avenue United FC Website Application",
+  "repository": "https://github.com/benny568/clubWebsite.git",
   "scripts": {
     "postinstall": " ./node_modules/.bin/typings install",
     "tsc": "tsc",
@@ -13,7 +15,7 @@
     "angular2": "2.0.0-beta.14",
     "bootstrap": "^3.3.6",
     "es6-shim": "0.35.0",
-    "jquery": "^2.2.3",
+    "log4javascript": "^1.4.14",
     "ng2-bootstrap": "1.0.11",
     "reflect-metadata": "0.1.2",
     "rxjs": "5.0.0-beta.2",
