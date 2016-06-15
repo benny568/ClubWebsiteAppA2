@@ -11,6 +11,10 @@ gradle/**
 build/**
 .settings/
 .gradle/
+.idea/
+_windows/
+inspection/
+typings/
 
 
 clubRegisterApp/WebContent/WEB-INF/resources/node_modules/**/*
